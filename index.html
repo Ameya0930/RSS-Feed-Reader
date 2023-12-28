@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSS Feed Entry</title>
+  <style>
+    body {
+      background: #000; /* Black background color */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden; /* Hide potential overflow of the gradient */
+    }
+
+    #rssContainer {
+      text-align: center;
+      color: #fff; /* White text color */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      opacity: 0; /* Set initial opacity to 0 for the animation */
+      animation: fadeInAndMove 0.8s ease-out forwards;
+      display: grid; /* Use grid layout */
+      grid-template-columns: 1fr; /* Single column layout */
+      gap: 20px; /* Gap between elements */
+    }
+
+    @keyframes fadeInAndMove {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #rssLogo {
+      width: 120px; /* Adjust the width as needed */
+      height: 120px; /* Set the height to match the width */
+      margin-bottom: 10px;
+      background-color: #000; /* Black background color */
+      display: block; /* Remove inline spacing */
+      border-radius: 50%; /* Make the logo a circle */
+      object-fit: cover; /* Ensure the image covers the entire container */
+    }
+
+    #rssInput {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      margin-bottom: 15px;
+      border: 1px solid #ddd; /* Light border color */
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    #rssInput:focus {
+      outline: none;
+      border-color: #007bff; /* Focus color */
+    }
+
+    #submitBtn,
+    #saveBtn {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007bff; /* Button color */
+      color: #fff; /* Button text color */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    #submitBtn:hover,
+    #saveBtn:hover {
+      background-color: #0056b3; /* Darker color on hover */
+    }
+
+    #sidebar,
+    #feedDetails,
+    #itemList {
+      background-color: #333; /* Background color for sections */
+      color: #fff; /* Text color for sections */
+      padding: 20px;
+      border-radius: 8px;
+      overflow-wrap: break-word; /* Wrap long lines */
+      overflow-y: auto; /* Enable vertical scrollbar */
+      max-height: 300px; /* Set a maximum height for the scrollbar */
+    }
+
+    #sidebar {
+      grid-column: 1 / span 1; /* Span one column */
+    }
+
+    #feedDetails {
+      grid-column: 1 / span 1; /* Span one column */
+      margin-top: 20px;
+    }
+
+    #itemList {
+      grid-column: 1 / span 1; /* Span one column */
+      margin-top: 20px;
+      list-style-type: none;
+    }
+
+    #itemList a {
+      color: #007bff; /* Hyperlink color */
+      text-decoration: none;
+    }
+
+    #itemList li {
+      margin-bottom: 20px;
+    }
+
+    #itemList h3 {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="rssContainer">
+    <img src="rss2.png" alt="RSS Logo" id="rssLogo">
+    <h1 style="margin-bottom: 20px;">Enter RSS Feed</h1>
+    <!-- Change the form action to the backend URL -->
+    <form id="rssForm">
+      <input type="text" id="rssInput" name="rss_url" placeholder="Paste RSS feed URL here">
+      <button type="submit" id="submitBtn">Submit</button>
+      <button type="button" id="saveBtn">Save</button>
+    </form>
+
+    <!-- Sidebar to display entered and saved RSS feeds -->
+    <div id="sidebar"></div>
+
+    <!-- Display details of the entered RSS feed -->
+    <div id="feedDetails"></div>
+
+    <!-- Display all items from the entered RSS feed -->
+    <ul id="itemList"></ul>
+  </div>
+
+  <script>
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      const rssInputValue = document.getElementById('rssInput').value;
+
+      if (rssInputValue.trim() !== '') {
+        const link = document.createElement('a');
+        link.href = '#'; // You can set a placeholder link or leave it empty
+        link.textContent = rssInputValue;
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          // Handle the click event, e.g., load the saved RSS feed
+          // You can add your logic here
+        });
+
+        const listItem = document.createElement('li');
+        listItem.appendChild(link);
+        document.getElementById('sidebar').appendChild(listItem);
+        document.getElementById('rssInput').value = '';
+      }
+    });
+
+    document.getElementById('rssForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevents the default form submission
+
+      const rssInputValue = document.getElementById('rssInput').value;
+
+      if (rssInputValue.trim() !== '') {
+        fetchRssDetails(rssInputValue);
+      }
+    });
+
+    async function fetchRssDetails(url) {
+      try {
+        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        displayRssDetails(data);
+        displayAllItems(data);
+      } catch (error) {
+        console.error('Error fetching RSS details:', error);
+      }
+    }
+
+    function displayRssDetails(data) {
+      const feedDetails = document.getElementById('feedDetails');
+      feedDetails.innerHTML = `<h2>${data.feed.title}</h2>
+                               <p>${data.feed.description}</p>
+                               <p>Published: ${data.feed.pubDate}</p>`;
+    }
+
+    function displayAllItems(data) {
+      const itemList = document.getElementById('itemList');
+      itemList.innerHTML = ''; // Clear existing items
+
+      data.items.forEach(item => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = item.link;
+        link.textContent = item.title;
+        listItem.appendChild(link);
+        itemList.appendChild(listItem);
+      });
+    }
+     function displayAllItems(data) {
+    const itemList = document.getElementById('itemList');
+    itemList.innerHTML = ''; // Clear existing items
+
+    data.items.forEach(item => {
+      const listItem = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = item.link;
+      link.textContent = item.title;
+      listItem.appendChild(link);
+
+      // Display 10 lines about the description
+      const descriptionSnippet = document.createElement('p');
+      descriptionSnippet.innerHTML = `<strong>Description:</strong> ${getSnippet(item.description, 10)}`;
+      listItem.appendChild(descriptionSnippet);
+
+      // Add more details or customize as needed
+
+      itemList.appendChild(listItem);
+    });
+  }
+
+  // Function to get a snippet with a specified number of lines
+  function getSnippet(text, lines) {
+    const snippetLines = text.split('\n').slice(0, lines);
+    return snippetLines.join('<br>');
+  }
+  </script>
+</body>
+
+</html>

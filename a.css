@@ -1,0 +1,107 @@
+#rssContainer {
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeInAndMove 0.8s ease-out forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #rssInput {
+    padding: 10px;
+    font-size: 16px;
+    width: 80%;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0 auto; /* Center horizontally */
+  }
+  
+  #rssInput:focus {
+    outline: none;
+    border-color: #007bff;
+    /* Focus color */
+  }
+  
+  #submitBtn,
+  #saveBtn {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    /* Button color */
+    color: #fff;
+    /* Button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+  }
+  
+  #submitBtn:hover,
+  #saveBtn:hover {
+    background-color: #0056b3;
+    /* Darker color on hover */
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+    /* Adjust the margin as needed */
+  }
+  
+  #sidebar {
+    background-color: #333;
+    /* Sidebar background color */
+    color: #fff;
+    /* Sidebar text color */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 200px;
+    overflow-wrap: break-word;
+    /* Wrap long lines */
+    position: fixed;
+    top: 0;
+    right: -200px;
+    /* Initially hide sidebar off-screen to the right */
+    height: 100%;
+    transition: right 0.3s ease;
+  }
+  
+  #menuBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+    z-index: 2;
+  }
+  #sidebar {
+    background-color: #333;
+    /* Sidebar background color */
+    color: #fff;
+    /* Sidebar text color */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 200px;
+    overflow-wrap: break-word;
+    /* Wrap long lines */
+    position: fixed;
+    top: 0;
+    right: -200px; /* Initially hide sidebar off-screen to the right */
+    height: 100%;
+    transition: right 0.3s ease;
+  }
+  
