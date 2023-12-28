@@ -3,3 +3,12 @@
 Getting Started
 
 Clone the repository:
+<pre>
+    <code class="bash">
+git clone https://github.com/Ameya0930/RSS-Feed-Reader.git
+     
+cd RSS-reader
+     
+open index.html
+    </code>
+  </pre>
